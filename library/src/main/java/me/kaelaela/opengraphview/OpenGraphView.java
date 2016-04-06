@@ -1,13 +1,18 @@
 package me.kaelaela.opengraphview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.net.Uri;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,9 +25,19 @@ public class OpenGraphView extends RelativeLayout {
 
     public static final String TAG = "OpenGraphView";
 
-    private ImageView imageView;
+    @ColorInt
+    private int mStrokeColor = -1;
+    @ColorInt
+    private int mBgColor = -1;
+    private float mStrokeWidth = 0;
+    private int mViewWidth;
+    private int mViewHeight;
+    private View mSeparator;
+    private ImageView mImageView;
     private String mUrl;
     private OnLoadListener mOnLoadListener;
+    private Paint mFill = new Paint();
+    private Paint mStroke = new Paint();
 
     public OpenGraphView(Context context) {
         this(context, null);
@@ -35,6 +50,73 @@ public class OpenGraphView extends RelativeLayout {
     public OpenGraphView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         inflate(getContext(), R.layout.view_open_graph, this);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.OpenGraphView, defStyleAttr, 0);
+        if (attrs == null) {
+            return;
+        }
+        mSeparator = findViewById(R.id.separator);
+        setWillNotDraw(false);
+        mFill.setStyle(Paint.Style.FILL);
+        mFill.setAntiAlias(true);
+        mFill.setColor(ContextCompat.getColor(context, android.R.color.white));
+
+        mStroke.setStyle(Paint.Style.STROKE);
+        mStroke.setAntiAlias(true);
+        mStroke.setColor(ContextCompat.getColor(context, R.color.light_gray));
+
+        mImageView = (ImageView) findViewById(R.id.og_image);
+        setBgColor(array.getColor(R.styleable.OpenGraphView_bgColor,
+                ContextCompat.getColor(context, android.R.color.white)));
+        ((TextView) findViewById(R.id.og_title)).setTextColor(
+                array.getColor(R.styleable.OpenGraphView_titleColor,
+                        ContextCompat.getColor(context, R.color.text_black)));
+        ((TextView) findViewById(R.id.og_description)).setTextColor(
+                array.getColor(R.styleable.OpenGraphView_descTextColor,
+                        ContextCompat.getColor(context, R.color.text_black)));
+        ((TextView) findViewById(R.id.og_url)).setTextColor(
+                array.getColor(R.styleable.OpenGraphView_urlTextColor,
+                        ContextCompat.getColor(context, R.color.base_gray)));
+        setStrokeColor(array.getColor(R.styleable.OpenGraphView_strokeColor,
+                ContextCompat.getColor(context, R.color.light_gray)));
+        setStrokeWidth(array.getDimension(R.styleable.OpenGraphView_strokeWidth, 2f));
+        mSeparator.setVisibility(array.getBoolean(R.styleable.OpenGraphView_separateImage, true) ? VISIBLE : GONE);
+        mImageView.setImageDrawable(array.getDrawable(R.styleable.OpenGraphView_imagePlaceHolder));
+        ((ImageView) findViewById(R.id.favicon))
+                .setImageDrawable(array.getDrawable(R.styleable.OpenGraphView_faviconPlaceHolder));
+        array.recycle();
+    }
+
+    public void setBgColor(@ColorInt int bgColor) {
+        mBgColor = bgColor;
+        mFill.setColor(mBgColor);
+    }
+
+    public void setStrokeColor(@ColorInt int strokeColor) {
+        mStrokeColor = strokeColor;
+        mStroke.setColor(strokeColor);
+    }
+
+    public void setStrokeWidth(float strokeWidth) {
+        if (strokeWidth < 0) {
+            mStrokeWidth = getContext().getResources().getDimensionPixelOffset(R.dimen.default_stroke_width);
+            return;
+        }
+        RelativeLayout.LayoutParams sepaParam = (RelativeLayout.LayoutParams) mSeparator.getLayoutParams();
+        sepaParam.width = (int) strokeWidth;
+        mSeparator.setLayoutParams(sepaParam);
+        mSeparator.setBackgroundColor(mStrokeColor);
+
+        mStrokeWidth = strokeWidth;
+        mStroke.setStrokeWidth(strokeWidth);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
+        int margin = (int) (mStrokeWidth);
+        params.setMargins(margin, margin, margin, margin);
+        params.width = params.width - margin * 2;
+        params.height = params.height - margin * 2;
+        mImageView.setLayoutParams(params);
+        mImageView.setTranslationX(margin / 2);
+        invalidate();
     }
 
     public void setOnLoadListener(OnLoadListener listener) {
@@ -89,6 +171,21 @@ public class OpenGraphView extends RelativeLayout {
         loadFrom(mUrl);
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        float padding = mStrokeWidth / 2;
+        canvas.drawRect(padding, padding, mViewWidth - padding, mViewHeight - padding, mStroke);
+        canvas.drawRect(mStrokeWidth, mStrokeWidth, mViewWidth - mStrokeWidth, mViewHeight - mStrokeWidth, mFill);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mViewWidth = w;
+        mViewHeight = h;
+    }
+
     private void loadImage(String url) {
         LoadImageTask task = new LoadImageTask(new LoadImageTask.OnLoadListener() {
             @Override
@@ -101,9 +198,9 @@ public class OpenGraphView extends RelativeLayout {
             public void onLoadSuccess(Bitmap bitmap) {
                 super.onLoadSuccess(bitmap);
                 Log.d(TAG, "success image loading");
-                imageView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
-                imageView.setImageBitmap(bitmap);
-                ImageAnimator.alphaAnimation(imageView);
+                mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+                mImageView.setImageBitmap(bitmap);
+                ImageAnimator.alphaAnimation(mImageView);
             }
 
             @Override
@@ -113,8 +210,8 @@ public class OpenGraphView extends RelativeLayout {
             }
         });
         task.execute(url);
-        if (imageView != null) {
-            imageView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+        if (mImageView != null) {
+            mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
         }
     }
 
@@ -152,7 +249,6 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     private void setOpenGraphData(OGData data) {
-        imageView = (ImageView) findViewById(R.id.og_image);
         TextView url = (TextView) findViewById(R.id.og_url);
         TextView title = (TextView) findViewById(R.id.og_title);
         TextView description = (TextView) findViewById(R.id.og_description);
@@ -160,15 +256,15 @@ public class OpenGraphView extends RelativeLayout {
             title.setText(mUrl);
             url.setText("");
             description.setText("");
-            imageView.setVisibility(VISIBLE);
+            mImageView.setVisibility(VISIBLE);
             return;
         }
 
         boolean isImageEmpty = TextUtils.isEmpty(data.getImage());
         if (!isImageEmpty) {
-            imageView.setImageURI(Uri.parse(data.getImage()));
+            mImageView.setImageURI(Uri.parse(data.getImage()));
         }
-        imageView.setVisibility(isImageEmpty ? GONE : VISIBLE);
+        mImageView.setVisibility(isImageEmpty ? GONE : VISIBLE);
         if (TextUtils.isEmpty(data.getTitle()) && TextUtils.isEmpty(data.getDescription())) {
             title.setText(mUrl);
             description.setText("");
@@ -187,7 +283,7 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     public void clear() {
-        imageView.setImageDrawable(null);
+        mImageView.setImageDrawable(null);
         ((TextView) findViewById(R.id.og_url)).setText("");
         ((TextView) findViewById(R.id.og_title)).setText("");
         ((TextView) findViewById(R.id.og_description)).setText("");

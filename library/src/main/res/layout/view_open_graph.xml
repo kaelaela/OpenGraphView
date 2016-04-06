@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="96dp"
-        android:background="@drawable/shape_open_graph_background"
+        android:foreground="@drawable/open_graph_foreground"
         android:paddingEnd="12dp"
         android:paddingLeft="0dp"
         android:paddingRight="12dp"
@@ -15,19 +15,24 @@
             android:layout_height="96dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="1dp"
             android:layout_marginStart="1dp"
-            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
             android:adjustViewBounds="true"
             android:background="@color/light_gray"
+            android:scaleType="centerCrop"
             />
 
     <View
+            android:id="@+id/separator"
             android:layout_width="1dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
             android:layout_toEndOf="@id/og_image"
             android:layout_toRightOf="@id/og_image"
+            android:adjustViewBounds="true"
             android:background="@color/light_gray"
             />
 
