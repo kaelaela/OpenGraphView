@@ -1,22 +1,61 @@
 OpenGraphView
 ===
 
+[![Download](https://api.bintray.com/packages/kaelaela/maven/OpenGraphView/images/download.svg) ](https://bintray.com/kaelaela/maven/OpenGraphView/_latestVersion)
+[![License](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+
 Rich url link view for Android.
 
 ![default](art/ogview.gif)
 
 ## Usage
 
+```groovy
+compile 'me.kaelaela:OpenGraphView:1.0.1'
+```
+
 ```java
 OpenGraphView ogView = new OpenGraphView();
 ogView.loadFrom(url);
 ```
 
+## Attributes
+
+```xml
+<me.kaelaela.opengraphview.OpenGraphView
+            android:id="@+id/og_view"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            og:bgColor="@android:color/white"
+            og:descTextColor="@color/text_black"
+            og:faviconPlaceHolder="@color/light_gray"
+            og:imagePlaceHolder="@color/light_gray"
+            og:separateImage="true"
+            og:strokeColor="@color/light_gray"
+            og:strokeWidth="2dp"
+            og:titleColor="@color/text_black"
+            og:urlTextColor="@color/base_gray"
+            />
+```
+
+| Attribute | Description |
+|:---|:---|
+| bgColor | Set background color |
+| imagePlaceHolder | Set image or drawable to image place holder |
+| faviconPlaceHolder | Set image or drawable to favicon place holder |
+| separateImage | Set image separator visiblity |
+| strokeColor | Set stroke color |
+| strokeWidth | Set stroke width |
+| titleColor | Set og title text color |
+| descTextColor | Set og description text color |
+| urlTextColor | Set og url text color |
+
 ## Milestone
 
 - [ ] Custom layout
- - [ ] View color
- - [ ] Text size, line, style, color
+ - [x] View color
+ - [ ] View size
+ - [x] Text ~~size, line, style,~~ color
  - [ ] Image position
  - [ ] Rounded view
 - [ ] Image cache
