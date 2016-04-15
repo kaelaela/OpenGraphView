@@ -68,6 +68,10 @@ Yuichi Maekawa(Kaelaela)
 * Twitter [@Yuichi0531](https://twitter.com/Yuichi0531)
 * kaelaela.31@gmail.com
 
+##### Inspired
+
+[szk-atmosphere/URLEmbeddedView](https://github.com/szk-atmosphere/URLEmbeddedView)
+
 License
 -------
     Copyright (C) 2016 kaelaela
