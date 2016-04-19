@@ -9,6 +9,10 @@
         <attr name="strokeColor" format="color" />
         <attr name="separateImage" format="boolean" />
         <attr name="imagePlaceHolder" format="reference" />
+        <attr name="imagePosition" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
         <attr name="faviconPlaceHolder" format="reference" />
     </declare-styleable>
 </resources>

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/parent"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="wrap_content"
         android:foreground="@drawable/open_graph_foreground"
-        android:paddingEnd="12dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="12dp"
-        android:paddingStart="0dp"
         >
 
     <ImageView
@@ -36,70 +33,66 @@
             android:background="@color/light_gray"
             />
 
-    <TextView
-            android:id="@+id/og_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_toEndOf="@id/og_image"
-            android:layout_toRightOf="@id/og_image"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/text_black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            />
-
-    <TextView
-            android:id="@+id/og_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/og_title"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
-            android:layout_toEndOf="@id/og_image"
-            android:layout_toRightOf="@id/og_image"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/text_black"
-            android:textColorLink="@color/text_black"
-            android:textSize="12sp"
-            />
-
     <LinearLayout
+            android:id="@+id/og_contents"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
+            android:layout_height="match_parent"
             android:layout_toEndOf="@id/og_image"
             android:layout_toRightOf="@id/og_image"
-            android:orientation="horizontal"
+            android:layout_margin="@dimen/default_content_padding"
+            android:orientation="vertical"
             >
 
-        <ImageView
-                android:id="@+id/favicon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
-                android:background="@color/light_gray"
+        <TextView
+                android:id="@+id/og_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/text_black"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 />
 
         <TextView
-                android:id="@+id/og_url"
-                android:layout_width="wrap_content"
+                android:id="@+id/og_description"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/base_gray"
+                android:maxLines="2"
+                android:textColor="@color/text_black"
+                android:textColorLink="@color/text_black"
                 android:textSize="12sp"
                 />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="horizontal"
+                >
+
+            <ImageView
+                    android:id="@+id/favicon"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
+                    android:background="@color/light_gray"
+                    />
+
+            <TextView
+                    android:id="@+id/og_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/base_gray"
+                    android:textSize="12sp"
+                    />
+
+        </LinearLayout>
 
     </LinearLayout>
 
