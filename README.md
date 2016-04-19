@@ -11,7 +11,7 @@ Rich url link view for Android.
 ## Usage
 
 ```groovy
-compile 'me.kaelaela:OpenGraphView:1.0.1'
+compile 'me.kaelaela:OpenGraphView:1.0.2'
 ```
 
 ```java
@@ -35,6 +35,7 @@ ogView.loadFrom(url);
             og:strokeWidth="2dp"
             og:titleColor="@color/text_black"
             og:urlTextColor="@color/base_gray"
+            og:imagePosition="left|right"
             />
 ```
 
@@ -49,6 +50,7 @@ ogView.loadFrom(url);
 | titleColor | Set og title text color |
 | descTextColor | Set og description text color |
 | urlTextColor | Set og url text color |
+| imagePosition | Set image position to left or right |
 
 ## Milestone
 
@@ -56,7 +58,7 @@ ogView.loadFrom(url);
  - [x] View color
  - [ ] View size
  - [x] Text ~~size, line, style,~~ color
- - [ ] Image position
+ - [x] Image position
  - [ ] Rounded view
 - [ ] Image cache
 - [ ] Enable load twitter
