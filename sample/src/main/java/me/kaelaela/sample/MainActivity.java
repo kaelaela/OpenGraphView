@@ -69,5 +69,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        findViewById(R.id.left_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGraphView.setImagePosition(OpenGraphView.IMAGE_POS_LEFT);
+            }
+        });
+        findViewById(R.id.right_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGraphView.setImagePosition(OpenGraphView.IMAGE_POS_RIGHT);
+            }
+        });
     }
 }
