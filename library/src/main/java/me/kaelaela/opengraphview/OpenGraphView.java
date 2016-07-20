@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,8 +23,6 @@ import me.kaelaela.opengraphview.network.tasks.LoadImageTask;
 import me.kaelaela.opengraphview.network.tasks.LoadOGDataTask;
 
 public class OpenGraphView extends RelativeLayout {
-
-    public static final String TAG = "OpenGraphView";
 
     public static final int IMAGE_POS_LEFT = 0;
     public static final int IMAGE_POS_RIGHT = 1;
@@ -206,13 +203,11 @@ public class OpenGraphView extends RelativeLayout {
                     mOnLoadListener.onLoadStart();
                 }
                 loadFavicon(mUrl);
-                Log.d(TAG, "start loading");
             }
 
             @Override
             public void onLoadSuccess(OGData ogData) {
                 super.onLoadSuccess(ogData);
-                Log.d(TAG, "success loading" + ogData.toString());
                 loadImage(ogData.getImage());
                 setOpenGraphData(ogData);
                 if (mOnLoadListener != null) {
@@ -226,7 +221,6 @@ public class OpenGraphView extends RelativeLayout {
                 if (mOnLoadListener != null) {
                     mOnLoadListener.onLoadError();
                 }
-                Log.d(TAG, "error loading");
             }
         });
         task.execute(url);
@@ -260,13 +254,11 @@ public class OpenGraphView extends RelativeLayout {
             @Override
             public void onLoadStart() {
                 super.onLoadStart();
-                Log.d(TAG, "start image loading");
             }
 
             @Override
             public void onLoadSuccess(Bitmap bitmap) {
                 super.onLoadSuccess(bitmap);
-                Log.d(TAG, "success image loading");
                 mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
                 mImageView.setImageBitmap(bitmap);
                 ImageAnimator.alphaAnimation(mImageView);
@@ -278,7 +270,6 @@ public class OpenGraphView extends RelativeLayout {
             @Override
             public void onLoadError() {
                 super.onLoadError();
-                Log.d(TAG, "error image loading");
             }
         });
         task.execute(url);
@@ -298,13 +289,11 @@ public class OpenGraphView extends RelativeLayout {
             @Override
             public void onLoadStart() {
                 super.onLoadStart();
-                Log.d(TAG, "start favicon loading");
             }
 
             @Override
             public void onLoadSuccess(Bitmap bitmap) {
                 super.onLoadSuccess(bitmap);
-                Log.d(TAG, "success favicon loading");
                 favicon.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
                 favicon.setImageBitmap(bitmap);
                 ImageAnimator.alphaAnimation(favicon);
@@ -313,7 +302,6 @@ public class OpenGraphView extends RelativeLayout {
             @Override
             public void onLoadError() {
                 super.onLoadError();
-                Log.d(TAG, "error favicon loading");
                 favicon.setVisibility(GONE);
             }
         });
