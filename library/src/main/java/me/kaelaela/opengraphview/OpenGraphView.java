@@ -37,10 +37,12 @@ public class OpenGraphView extends RelativeLayout {
     private boolean mSeparate = false;
     private View mSeparator;
     private ImageView mImageView;
+    private ImageView mFavicon;
     private String mUrl;
     private OnLoadListener mOnLoadListener;
     private Paint mFill = new Paint();
     private Paint mStroke = new Paint();
+    private static OGCache mOGCache = OGCache.getInstance();
 
     public OpenGraphView(Context context) {
         this(context, null);
@@ -68,6 +70,7 @@ public class OpenGraphView extends RelativeLayout {
         mStroke.setColor(ContextCompat.getColor(context, R.color.light_gray));
 
         mImageView = (ImageView) findViewById(R.id.og_image);
+        mFavicon = (ImageView) findViewById(R.id.favicon);
         setBgColor(array.getColor(R.styleable.OpenGraphView_bgColor,
                 ContextCompat.getColor(context, android.R.color.white)));
         ((TextView) findViewById(R.id.og_title)).setTextColor(
@@ -185,45 +188,49 @@ public class OpenGraphView extends RelativeLayout {
         mOnLoadListener = listener;
     }
 
-    public void loadFrom(@Nullable String url) {
+    public void loadFrom(@Nullable final String url) {
         setVisibility(TextUtils.isEmpty(url) ? GONE : VISIBLE);
-        if (TextUtils.isEmpty(url)) {
+        if (TextUtils.isEmpty(url) || mSeparator == null) {
             return;
         }
         mUrl = url;
-        if (mSeparator == null) {
-            return;
-        }
         mSeparator.setVisibility(GONE);
-        LoadOGDataTask task = new LoadOGDataTask(new LoadOGDataTask.OnLoadListener() {
-            @Override
-            public void onLoadStart() {
-                super.onLoadStart();
-                if (mOnLoadListener != null) {
-                    mOnLoadListener.onLoadStart();
+        OGData ogData = mOGCache.get(url);
+        if (ogData == null) {
+            new LoadOGDataTask(new LoadOGDataTask.OnLoadListener() {
+                @Override
+                public void onLoadStart() {
+                    super.onLoadStart();
+                    if (mOnLoadListener != null) {
+                        mOnLoadListener.onLoadStart();
+                    }
                 }
-                loadFavicon(mUrl);
-            }
 
-            @Override
-            public void onLoadSuccess(OGData ogData) {
-                super.onLoadSuccess(ogData);
-                loadImage(ogData.getImage());
-                setOpenGraphData(ogData);
-                if (mOnLoadListener != null) {
-                    mOnLoadListener.onLoadFinish();
+                @Override
+                public void onLoadSuccess(OGData ogData) {
+                    super.onLoadSuccess(ogData);
+                    mOGCache.add(url, ogData);
+                    loadImage(ogData.getImage());
+                    loadFavicon(mUrl);
+                    setOpenGraphData(ogData);
+                    if (mOnLoadListener != null) {
+                        mOnLoadListener.onLoadFinish();
+                    }
                 }
-            }
 
-            @Override
-            public void onLoadError() {
-                super.onLoadError();
-                if (mOnLoadListener != null) {
-                    mOnLoadListener.onLoadError();
+                @Override
+                public void onLoadError() {
+                    super.onLoadError();
+                    if (mOnLoadListener != null) {
+                        mOnLoadListener.onLoadError();
+                    }
                 }
-            }
-        });
-        task.execute(url);
+            }).execute(url);
+        } else {
+            loadImage(ogData.getImage());
+            loadFavicon(mUrl);
+            setOpenGraphData(ogData);
+        }
     }
 
     public void loadFrom(Uri uri) {
@@ -249,63 +256,77 @@ public class OpenGraphView extends RelativeLayout {
         mViewHeight = h;
     }
 
-    private void loadImage(String url) {
-        LoadImageTask task = new LoadImageTask(new LoadImageTask.OnLoadListener() {
-            @Override
-            public void onLoadStart() {
-                super.onLoadStart();
-            }
-
-            @Override
-            public void onLoadSuccess(Bitmap bitmap) {
-                super.onLoadSuccess(bitmap);
-                mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
-                mImageView.setImageBitmap(bitmap);
-                ImageAnimator.alphaAnimation(mImageView);
-                if (mSeparate) {
-                    mSeparator.setVisibility(VISIBLE);
+    private void loadImage(final String url) {
+        Bitmap bitmap = mOGCache.getImage(url);
+        if (bitmap == null) {
+            new LoadImageTask(new LoadImageTask.OnLoadListener() {
+                @Override
+                public void onLoadStart() {
+                    super.onLoadStart();
                 }
-            }
 
-            @Override
-            public void onLoadError() {
-                super.onLoadError();
-            }
-        });
-        task.execute(url);
-        if (mImageView != null) {
-            mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+                @Override
+                public void onLoadSuccess(Bitmap bitmap) {
+                    super.onLoadSuccess(bitmap);
+                    mOGCache.addImage(url, bitmap);
+                    setImage(bitmap);
+                }
+
+                @Override
+                public void onLoadError() {
+                    super.onLoadError();
+                    if (mImageView != null) {
+                        mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
+                    }
+                }
+            }).execute(url);
+        } else {
+            setImage(bitmap);
+        }
+    }
+
+    private void setImage(Bitmap bitmap) {
+        mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        mImageView.setImageBitmap(bitmap);
+        ImageAnimator.alphaAnimation(mImageView);
+        if (mSeparate) {
+            mSeparator.setVisibility(VISIBLE);
         }
     }
 
     private void loadFavicon(String url) {
         Uri uri = Uri.parse(url);
-        String host = uri.getHost();
-        if (host != null) {
-            host = host.startsWith("www.") ? host.substring(4) : host;
+        final String host = uri.getHost().startsWith("www.") ? uri.getHost().substring(4) : uri.getHost();
+        Bitmap favicon = mOGCache.getImage(host);
+        if (favicon == null) {
+            new LoadFaviconTask(new LoadFaviconTask.OnLoadListener() {
+                @Override
+                public void onLoadStart() {
+                    super.onLoadStart();
+                }
+
+                @Override
+                public void onLoadSuccess(Bitmap bitmap) {
+                    super.onLoadSuccess(bitmap);
+                    mOGCache.addImage(host, bitmap);
+                    setFavicon(bitmap);
+                }
+
+                @Override
+                public void onLoadError() {
+                    super.onLoadError();
+                    mFavicon.setVisibility(GONE);
+                }
+            }).execute(host);
+        } else {
+            setFavicon(favicon);
         }
-        final ImageView favicon = (ImageView) findViewById(R.id.favicon);
-        LoadFaviconTask task = new LoadFaviconTask(new LoadFaviconTask.OnLoadListener() {
-            @Override
-            public void onLoadStart() {
-                super.onLoadStart();
-            }
+    }
 
-            @Override
-            public void onLoadSuccess(Bitmap bitmap) {
-                super.onLoadSuccess(bitmap);
-                favicon.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
-                favicon.setImageBitmap(bitmap);
-                ImageAnimator.alphaAnimation(favicon);
-            }
-
-            @Override
-            public void onLoadError() {
-                super.onLoadError();
-                favicon.setVisibility(GONE);
-            }
-        });
-        task.execute(host);
+    private void setFavicon(Bitmap bitmap) {
+        mFavicon.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        mFavicon.setImageBitmap(bitmap);
+        ImageAnimator.alphaAnimation(mFavicon);
     }
 
     private void setOpenGraphData(OGData data) {
@@ -321,9 +342,6 @@ public class OpenGraphView extends RelativeLayout {
         }
 
         boolean isImageEmpty = TextUtils.isEmpty(data.getImage());
-        if (!isImageEmpty) {
-            mImageView.setImageURI(Uri.parse(data.getImage()));
-        }
         mImageView.setVisibility(isImageEmpty ? GONE : VISIBLE);
         if (TextUtils.isEmpty(data.getTitle()) && TextUtils.isEmpty(data.getDescription())) {
             title.setText(mUrl);
