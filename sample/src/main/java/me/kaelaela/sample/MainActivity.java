@@ -82,5 +82,12 @@ public class MainActivity extends AppCompatActivity {
                 openGraphView.setImagePosition(OpenGraphView.IMAGE_POS_RIGHT);
             }
         });
+
+        findViewById(R.id.open_list_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkListActivity.launch(v.getContext());
+            }
+        });
     }
 }
