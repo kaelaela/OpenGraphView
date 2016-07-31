@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:og="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <me.kaelaela.opengraphview.OpenGraphView
+            android:id="@+id/og_view"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            og:bgColor="@android:color/white"
+            og:descTextColor="@color/text_black"
+            og:faviconPlaceHolder="@color/light_gray"
+            og:imagePlaceHolder="@color/light_gray"
+            og:separateImage="true"
+            og:strokeColor="@color/light_gray"
+            og:strokeWidth="2dp"
+            og:titleColor="@color/text_black"
+            og:urlTextColor="@color/base_gray"
+    />
+
+</LinearLayout>

@@ -22,6 +22,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':library')
-    compile "com.android.support:appcompat-v7:$SUPPORT_APP_COMPAT_VERSION"
+    compile "com.android.support:design:$SUPPORT_APP_COMPAT_VERSION"
     compile "com.android.support:customtabs:$SUPPORT_APP_COMPAT_VERSION"
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="me.kaelaela.sample"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="me.kaelaela.sample">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <application
             android:allowBackup="true"
@@ -15,6 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".LinkListActivity"/>
     </application>
 
 </manifest>
