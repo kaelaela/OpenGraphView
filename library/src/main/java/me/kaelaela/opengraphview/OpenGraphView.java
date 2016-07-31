@@ -275,9 +275,6 @@ public class OpenGraphView extends RelativeLayout {
                 @Override
                 public void onLoadError() {
                     super.onLoadError();
-                    if (mImageView != null) {
-                        mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_gray));
-                    }
                 }
             }).execute(url);
         } else {

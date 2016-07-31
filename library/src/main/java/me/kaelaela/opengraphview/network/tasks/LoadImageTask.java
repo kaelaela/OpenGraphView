@@ -3,6 +3,7 @@ package me.kaelaela.opengraphview.network.tasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -30,6 +31,9 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... urls) {
         listener.onLoadStart();
         String url = urls[0];
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
         Bitmap image = null;
         try {
             InputStream inputStream = new URL(url).openStream();
