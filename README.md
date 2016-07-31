@@ -60,7 +60,7 @@ ogView.loadFrom(url);
  - [x] Text ~~size, line, style,~~ color
  - [x] Image position
  - [ ] Rounded view
-- [ ] Image cache
+- [x] Image cache
 - [ ] Enable load twitter
 - [ ] More metadata
 
