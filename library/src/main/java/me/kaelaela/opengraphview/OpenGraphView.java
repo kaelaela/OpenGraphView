@@ -38,6 +38,7 @@ public class OpenGraphView extends RelativeLayout {
     private View mSeparator;
     private ImageView mImageView;
     private ImageView mFavicon;
+    private Uri mUri;
     private String mUrl;
     private OnLoadListener mOnLoadListener;
     private Paint mFill = new Paint();
@@ -190,9 +191,10 @@ public class OpenGraphView extends RelativeLayout {
 
     public void loadFrom(@Nullable final String url) {
         setVisibility(TextUtils.isEmpty(url) ? GONE : VISIBLE);
-        if (TextUtils.isEmpty(url) || mSeparator == null) {
+        if (TextUtils.isEmpty(url) || mSeparator == null || url.startsWith("http://") || url.startsWith("https://")) {
             return;
         }
+        mUri = Uri.parse(url);
         mUrl = url;
         mSeparator.setVisibility(GONE);
         OGData ogData = mOGCache.get(url);
@@ -237,6 +239,7 @@ public class OpenGraphView extends RelativeLayout {
         if (uri == null) {
             return;
         }
+        mUri = uri;
         mUrl = uri.getPath();
         loadFrom(mUrl);
     }
@@ -355,6 +358,10 @@ public class OpenGraphView extends RelativeLayout {
 
     public String getUrl() {
         return mUrl;
+    }
+
+    public Uri getUri() {
+        return mUri;
     }
 
     public void clear() {
