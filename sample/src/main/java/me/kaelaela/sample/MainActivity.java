@@ -73,13 +73,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.left_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGraphView.setImagePosition(OpenGraphView.IMAGE_POS_LEFT);
+                openGraphView.setImagePosition(OpenGraphView.IMAGE_POSITION.LEFT);
             }
         });
         findViewById(R.id.right_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGraphView.setImagePosition(OpenGraphView.IMAGE_POS_RIGHT);
+                openGraphView.setImagePosition(OpenGraphView.IMAGE_POSITION.RIGHT);
             }
         });
 

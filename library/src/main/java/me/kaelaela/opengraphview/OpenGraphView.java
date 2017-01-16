@@ -1,7 +1,6 @@
 package me.kaelaela.opengraphview;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -24,8 +23,9 @@ import me.kaelaela.opengraphview.network.tasks.LoadOGDataTask;
 
 public class OpenGraphView extends RelativeLayout {
 
-    public static final int IMAGE_POS_LEFT = 0;
-    public static final int IMAGE_POS_RIGHT = 1;
+    public enum IMAGE_POSITION {
+        LEFT, RIGHT
+    }
 
     @ColorInt
     private int mStrokeColor = -1;
@@ -36,7 +36,7 @@ public class OpenGraphView extends RelativeLayout {
     private float mStrokeWidth = 0;
     private boolean mSeparate = false;
     private View mSeparator;
-    private ImageView mImageView;
+    private RoundableImageView mRoundableImageView;
     private ImageView mFavicon;
     private String mUrl;
     private OnLoadListener mOnLoadListener;
@@ -69,7 +69,7 @@ public class OpenGraphView extends RelativeLayout {
         mStroke.setAntiAlias(true);
         mStroke.setColor(ContextCompat.getColor(context, R.color.light_gray));
 
-        mImageView = (ImageView) findViewById(R.id.og_image);
+        mRoundableImageView = (RoundableImageView) findViewById(R.id.og_image);
         mFavicon = (ImageView) findViewById(R.id.favicon);
         setBgColor(array.getColor(R.styleable.OpenGraphView_bgColor,
                 ContextCompat.getColor(context, android.R.color.white)));
@@ -85,10 +85,13 @@ public class OpenGraphView extends RelativeLayout {
         setStrokeColor(array.getColor(R.styleable.OpenGraphView_strokeColor,
                 ContextCompat.getColor(context, R.color.light_gray)));
         setStrokeWidth(array.getDimension(R.styleable.OpenGraphView_strokeWidth, 2f));
-        setImagePosition(array.getInteger(R.styleable.OpenGraphView_imagePosition, IMAGE_POS_LEFT));
+        setCornerRadius(array.getDimension(R.styleable.OpenGraphView_cornerRadius, 0));
+        int attrPosition = array.getInteger(R.styleable.OpenGraphView_imagePosition, 0);
+
+        setImagePosition((attrPosition == 0 || attrPosition != 1) ? IMAGE_POSITION.LEFT : IMAGE_POSITION.RIGHT);
         mSeparate = array.getBoolean(R.styleable.OpenGraphView_separateImage, true);
         mSeparator.setVisibility(mSeparate ? VISIBLE : GONE);
-        mImageView.setImageDrawable(array.getDrawable(R.styleable.OpenGraphView_imagePlaceHolder));
+        mRoundableImageView.setImageDrawable(array.getDrawable(R.styleable.OpenGraphView_imagePlaceHolder));
         ((ImageView) findViewById(R.id.favicon))
                 .setImageDrawable(array.getDrawable(R.styleable.OpenGraphView_faviconPlaceHolder));
         array.recycle();
@@ -109,60 +112,44 @@ public class OpenGraphView extends RelativeLayout {
             mStrokeWidth = getContext().getResources().getDimensionPixelOffset(R.dimen.default_stroke_width);
             return;
         }
-        RelativeLayout.LayoutParams sepaParam = (RelativeLayout.LayoutParams) mSeparator.getLayoutParams();
-        sepaParam.width = (int) strokeWidth;
-        mSeparator.setLayoutParams(sepaParam);
+        RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mSeparator.getLayoutParams();
+        param.width = (int) strokeWidth;
+        mSeparator.setLayoutParams(param);
         mSeparator.setBackgroundColor(mStrokeColor);
 
         mStrokeWidth = strokeWidth;
         mStroke.setStrokeWidth(strokeWidth);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageView.getLayoutParams();
-        int margin = (int) (mStrokeWidth);
-        params.setMargins(margin, margin, margin, margin);
-        params.width = params.width - margin * 2;
-        params.height = params.height - margin * 2;
-        mImageView.setLayoutParams(params);
-        mImageView.setTranslationX(margin / 2);
+        int defaultImageSize = getContext().getResources().getDimensionPixelOffset(R.dimen.default_image_size);
+        mRoundableImageView.setMargin(defaultImageSize, (int) mStrokeWidth);
         invalidate();
     }
 
-    /**
-     * set image position.
-     *
-     * @param position IMAGE_POS_LEFT(=0), IMAGE_POS_RIGHT(=1)
-     */
-    public void setImagePosition(int position) {
+    public void setCornerRadius(float cornerRadius) {
+        if (cornerRadius < 0) {
+            cornerRadius = 0;
+        }
+        mRoundableImageView.setRadius(cornerRadius);
+    }
+
+    public void setImagePosition(IMAGE_POSITION position) {
         int parentPadding = getContext().getResources().getDimensionPixelOffset(R.dimen.default_stroke_width);
         View parent = findViewById(R.id.parent);
-        if (position == IMAGE_POS_LEFT) {
-            setImageParam(ALIGN_PARENT_LEFT);
+        if (position == IMAGE_POSITION.LEFT) {
             setContentParam(RIGHT_OF);
             setSeparatorParam(RIGHT_OF);
             parent.setPadding(parentPadding, 0, 0, 0);
-        } else if (position == IMAGE_POS_RIGHT) {
-            setImageParam(ALIGN_PARENT_RIGHT);
+        } else if (position == IMAGE_POSITION.RIGHT) {
             setContentParam(LEFT_OF);
             setSeparatorParam(LEFT_OF);
             parent.setPadding(0, 0, parentPadding, 0);
         }
-    }
-
-    private void setImageParam(int rule) {
-        Resources resources = getContext().getResources();
-        int imageSize = resources.getDimensionPixelSize(R.dimen.default_image_size);
-        RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(imageSize, imageSize);
-        imageParams.addRule(rule);
-        int margin = resources.getDimensionPixelOffset(R.dimen.default_stroke_width);
-        imageParams.topMargin = margin;
-        imageParams.bottomMargin = margin;
-        mImageView.setLayoutParams(imageParams);
+        mRoundableImageView.setPosition(position);
     }
 
     private void setContentParam(int rule) {
         RelativeLayout.LayoutParams contentsParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        contentsParams.addRule(rule, mImageView.getId());
+        contentsParams.addRule(rule, mRoundableImageView.getId());
         View contents = findViewById(R.id.og_contents);
         contents.setLayoutParams(contentsParams);
         int padding = getContext().getResources().getDimensionPixelOffset(R.dimen.default_content_padding);
@@ -172,7 +159,7 @@ public class OpenGraphView extends RelativeLayout {
     private void setSeparatorParam(int rule) {
         RelativeLayout.LayoutParams separatorParams = new RelativeLayout.LayoutParams(
                 (int) mStrokeWidth, ViewGroup.LayoutParams.MATCH_PARENT);
-        separatorParams.addRule(rule, mImageView.getId());
+        separatorParams.addRule(rule, mRoundableImageView.getId());
         mSeparator.setLayoutParams(separatorParams);
     }
 
@@ -268,6 +255,9 @@ public class OpenGraphView extends RelativeLayout {
                 @Override
                 public void onLoadSuccess(Bitmap bitmap) {
                     super.onLoadSuccess(bitmap);
+                    if (bitmap == null) {
+                        return;
+                    }
                     mOGCache.addImage(url, bitmap);
                     setImage(bitmap);
                 }
@@ -283,9 +273,8 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     private void setImage(Bitmap bitmap) {
-        mImageView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        mImageView.setImageBitmap(bitmap);
-        ImageAnimator.alphaAnimation(mImageView);
+        mRoundableImageView.setImageBitmap(bitmap);
+        ImageAnimator.alphaAnimation(mRoundableImageView);
         if (mSeparate) {
             mSeparator.setVisibility(VISIBLE);
         }
@@ -334,12 +323,12 @@ public class OpenGraphView extends RelativeLayout {
             title.setText(mUrl);
             url.setText("");
             description.setText("");
-            mImageView.setVisibility(VISIBLE);
+            mRoundableImageView.setVisibility(VISIBLE);
             return;
         }
 
         boolean isImageEmpty = TextUtils.isEmpty(data.getImage());
-        mImageView.setVisibility(isImageEmpty ? GONE : VISIBLE);
+        mRoundableImageView.setVisibility(isImageEmpty ? GONE : VISIBLE);
         if (TextUtils.isEmpty(data.getTitle()) && TextUtils.isEmpty(data.getDescription())) {
             title.setText(mUrl);
             description.setText("");
@@ -358,7 +347,7 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     public void clear() {
-        mImageView.setImageDrawable(null);
+        mRoundableImageView.setImageDrawable(null);
         ((TextView) findViewById(R.id.og_url)).setText("");
         ((TextView) findViewById(R.id.og_title)).setText("");
         ((TextView) findViewById(R.id.og_description)).setText("");
