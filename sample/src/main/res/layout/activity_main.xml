@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="96dp"
             og:bgColor="@android:color/white"
+            og:cornerRadius="4dp"
             og:descTextColor="@color/text_black"
             og:faviconPlaceHolder="@color/light_gray"
             og:imagePlaceHolder="@color/light_gray"
@@ -121,6 +122,21 @@
                 />
 
     </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="set corner radius"
+            />
+
+    <SeekBar
+            android:id="@+id/radius_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:max="48"
+            />
 
     <Button
             android:id="@+id/open_list_button"

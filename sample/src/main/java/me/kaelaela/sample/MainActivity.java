@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import me.kaelaela.opengraphview.OpenGraphView;
 
 public class MainActivity extends AppCompatActivity {
@@ -80,6 +81,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGraphView.setImagePosition(OpenGraphView.IMAGE_POSITION.RIGHT);
+            }
+        });
+
+        final float density = getResources().getDisplayMetrics().density;
+        ((SeekBar) findViewById(R.id.radius_seek_bar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                openGraphView.setCornerRadius(progress * density);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
