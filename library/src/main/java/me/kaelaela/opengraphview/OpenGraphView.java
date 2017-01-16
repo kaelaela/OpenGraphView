@@ -5,12 +5,14 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,12 +36,15 @@ public class OpenGraphView extends RelativeLayout {
     private int mViewWidth;
     private int mViewHeight;
     private float mStrokeWidth = 0;
+    private float mCornerRadius = 0;
     private boolean mSeparate = false;
     private View mSeparator;
     private RoundableImageView mRoundableImageView;
     private ImageView mFavicon;
     private String mUrl;
     private OnLoadListener mOnLoadListener;
+    private RectF mFillRect = new RectF();
+    private RectF mStrokeRect = new RectF();
     private Paint mFill = new Paint();
     private Paint mStroke = new Paint();
     private static OGCache mOGCache = OGCache.getInstance();
@@ -118,6 +123,7 @@ public class OpenGraphView extends RelativeLayout {
         mSeparator.setBackgroundColor(mStrokeColor);
 
         mStrokeWidth = strokeWidth;
+        mFillRect.set(mStrokeWidth, mStrokeWidth, mViewWidth - mStrokeWidth, mViewHeight- mStrokeWidth);
         mStroke.setStrokeWidth(strokeWidth);
         int defaultImageSize = getContext().getResources().getDimensionPixelOffset(R.dimen.default_image_size);
         mRoundableImageView.setMargin(defaultImageSize, (int) mStrokeWidth);
@@ -128,7 +134,9 @@ public class OpenGraphView extends RelativeLayout {
         if (cornerRadius < 0) {
             cornerRadius = 0;
         }
+        mCornerRadius = cornerRadius;
         mRoundableImageView.setRadius(cornerRadius);
+        invalidate();
     }
 
     public void setImagePosition(IMAGE_POSITION position) {
@@ -231,9 +239,8 @@ public class OpenGraphView extends RelativeLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float padding = mStrokeWidth / 2;
-        canvas.drawRect(padding, padding, mViewWidth - padding, mViewHeight - padding, mStroke);
-        canvas.drawRect(mStrokeWidth, mStrokeWidth, mViewWidth - mStrokeWidth, mViewHeight - mStrokeWidth, mFill);
+        canvas.drawRoundRect(mStrokeRect, mCornerRadius, mCornerRadius, mStroke);
+        canvas.drawRoundRect(mFillRect, mCornerRadius, mCornerRadius, mFill);
     }
 
     @Override
@@ -241,6 +248,10 @@ public class OpenGraphView extends RelativeLayout {
         super.onSizeChanged(w, h, oldw, oldh);
         mViewWidth = w;
         mViewHeight = h;
+        if (mStrokeRect.width() == 0 && mStrokeRect.height() == 0) {
+            float padding = mStrokeWidth / 2;
+            mStrokeRect.set(padding, padding, mViewWidth - padding, mViewHeight - padding);
+        }
     }
 
     private void loadImage(final String url) {
