@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGraphView.clear();
-                openGraphView.loadFrom("https://github.com/trending");
+                openGraphView.loadFrom("https://about.me/kaelaela");
             }
         });
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGraphView.clear();
-                openGraphView.loadFrom("http://yuichi31.hatenablog.com/");
+                openGraphView.loadFrom("http://blog.kaelae.la/");
             }
         });
 

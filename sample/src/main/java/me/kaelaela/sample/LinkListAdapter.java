@@ -15,11 +15,11 @@ public class LinkListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public LinkListAdapter() {
         linkList.add("https://github.com/");
-        linkList.add("http://yuichi31.hatenablog.com/");
+        linkList.add("http://blog.kaelae.la/");
         linkList.add("http://ncode.syosetu.com/n2267be/");
         linkList.add("http://ogp.me/");
         linkList.add("https://twitter.com/kaelaela31");
-        linkList.add("https://design.google.com/");
+        linkList.add("https://about.me/kaelaela");
         linkList.add("http://connpass.com/user/yuichi_maekawa/");
     }
 
