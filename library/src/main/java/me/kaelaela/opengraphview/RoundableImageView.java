@@ -70,8 +70,14 @@ public class RoundableImageView extends ImageView {
     @Override
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
-        Bitmap centerCroppedBitmap = Bitmap.createBitmap(bm, (bm.getWidth() / 2) - (mSide / 2),
-                (bm.getHeight() / 2) - (mSide / 2), mSide, mSide);
+        Bitmap centerCroppedBitmap;
+        if (bm.getHeight() <= 0 || bm.getWidth() <= 0 || mSide <= 0 ||
+                bm.getWidth() < mSide || bm.getHeight() < mSide) {
+            centerCroppedBitmap = bm;
+        } else {
+            centerCroppedBitmap = Bitmap.createBitmap(bm, (bm.getWidth() / 2) - (mSide / 2),
+                    (bm.getHeight() / 2) - (mSide / 2), mSide, mSide);
+        }
         BitmapShader shader = new BitmapShader(centerCroppedBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         mPaint.setShader(shader);
     }

@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -89,7 +88,7 @@ public class OpenGraphView extends RelativeLayout {
                         ContextCompat.getColor(context, R.color.base_gray)));
         setStrokeColor(array.getColor(R.styleable.OpenGraphView_strokeColor,
                 ContextCompat.getColor(context, R.color.light_gray)));
-        setStrokeWidth(array.getDimension(R.styleable.OpenGraphView_strokeWidth, 2f));
+        setStrokeWidth();
         setCornerRadius(array.getDimension(R.styleable.OpenGraphView_cornerRadius, 0));
         int attrPosition = array.getInteger(R.styleable.OpenGraphView_imagePosition, 0);
 
@@ -112,19 +111,15 @@ public class OpenGraphView extends RelativeLayout {
         mStroke.setColor(strokeColor);
     }
 
-    public void setStrokeWidth(float strokeWidth) {
-        if (strokeWidth < 0) {
-            mStrokeWidth = getContext().getResources().getDimensionPixelOffset(R.dimen.default_stroke_width);
-            return;
-        }
+    private void setStrokeWidth() {
+        mStrokeWidth = getContext().getResources().getDimensionPixelOffset(R.dimen.default_stroke_width);
         RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams) mSeparator.getLayoutParams();
-        param.width = (int) strokeWidth;
+        param.width = (int) mStrokeWidth;
         mSeparator.setLayoutParams(param);
         mSeparator.setBackgroundColor(mStrokeColor);
 
-        mStrokeWidth = strokeWidth;
-        mFillRect.set(mStrokeWidth, mStrokeWidth, mViewWidth - mStrokeWidth, mViewHeight- mStrokeWidth);
-        mStroke.setStrokeWidth(strokeWidth);
+        mFillRect.set(mStrokeWidth, mStrokeWidth, mViewWidth - mStrokeWidth, mViewHeight - mStrokeWidth);
+        mStroke.setStrokeWidth(mStrokeWidth);
         int defaultImageSize = getContext().getResources().getDimensionPixelOffset(R.dimen.default_image_size);
         mRoundableImageView.setMargin(defaultImageSize, (int) mStrokeWidth);
         invalidate();
