@@ -3,6 +3,7 @@ package me.kaelaela.opengraphview.network.tasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -32,6 +33,9 @@ public class LoadFaviconTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... hosts) {
         listener.onLoadStart();
         String host = hosts[0];
+        if (TextUtils.isEmpty(host)) {
+            return null;
+        }
         Bitmap favicon = null;
         try {
             InputStream inputStream = new URL(BASE_URL + host).openStream();
