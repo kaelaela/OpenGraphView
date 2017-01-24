@@ -193,6 +193,7 @@ public class OpenGraphView extends RelativeLayout {
         } else {
             setVisibility(VISIBLE);
         }
+        setImage(null);
         mUri = Uri.parse(url);
         mUrl = url;
         mSeparator.setVisibility(GONE);
@@ -290,7 +291,9 @@ public class OpenGraphView extends RelativeLayout {
         }
     }
 
-    private void setImage(Bitmap bitmap) {
+    private void setImage(@Nullable Bitmap bitmap) {
+        mRoundableImageView.setVisibility(bitmap == null ? GONE : VISIBLE);
+        mSeparator.setVisibility(bitmap == null ? GONE : VISIBLE);
         mRoundableImageView.setImageBitmap(bitmap);
         ImageAnimator.alphaAnimation(mRoundableImageView);
         if (mSeparate) {
@@ -332,8 +335,9 @@ public class OpenGraphView extends RelativeLayout {
         }
     }
 
-    private void setFavicon(Bitmap bitmap) {
-        mFavicon.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.white));
+    private void setFavicon(@Nullable Bitmap bitmap) {
+        mFavicon.setVisibility(bitmap == null ? GONE : VISIBLE);
+        mFavicon.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
         mFavicon.setImageBitmap(bitmap);
         ImageAnimator.alphaAnimation(mFavicon);
     }

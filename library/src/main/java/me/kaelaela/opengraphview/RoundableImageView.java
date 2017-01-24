@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -70,6 +71,15 @@ public class RoundableImageView extends ImageView {
     @Override
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
+        if (bm == null) {
+            mPaint.reset();
+            mPaint.setColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
+            invalidate();
+            return;
+        } else {
+            mPaint.setColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        }
+
         Bitmap centerCroppedBitmap;
         if (bm.getHeight() <= 0 || bm.getWidth() <= 0 || mSide <= 0 ||
                 bm.getWidth() < mSide || bm.getHeight() < mSide) {
