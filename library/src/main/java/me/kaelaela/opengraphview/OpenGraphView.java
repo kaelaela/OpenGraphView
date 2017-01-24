@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -220,7 +221,7 @@ public class OpenGraphView extends RelativeLayout {
                         mOnLoadListener.onLoadError();
                     }
                 }
-            }).execute(url);
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
         } else {
             loadImage(ogData.getImage());
             loadFavicon(mUrl);
@@ -278,7 +279,7 @@ public class OpenGraphView extends RelativeLayout {
                 public void onLoadError() {
                     super.onLoadError();
                 }
-            }).execute(url);
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
         } else {
             setImage(bitmap);
         }
@@ -315,7 +316,7 @@ public class OpenGraphView extends RelativeLayout {
                     super.onLoadError();
                     mFavicon.setVisibility(GONE);
                 }
-            }).execute(host);
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, host);
         } else {
             setFavicon(favicon);
         }
