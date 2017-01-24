@@ -57,16 +57,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button loadButton = (Button) findViewById(R.id.load_button);
+        final EditText editText = (EditText) findViewById(R.id.url_form);
+        editText.setSelection(7);
         if (loadButton != null) {
             loadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EditText editText = (EditText) findViewById(R.id.url_form);
-                    if (openGraphView == null || editText == null) {
-                        return;
-                    }
                     openGraphView.clear();
                     openGraphView.loadFrom(String.valueOf(editText.getText()));
+                    editText.setText("http://");
+                    editText.setSelection(7);
                 }
             });
         }
