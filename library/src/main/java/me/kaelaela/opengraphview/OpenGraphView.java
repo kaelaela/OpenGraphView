@@ -12,8 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -180,8 +183,8 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     public void loadFrom(@Nullable final String url) {
-        setVisibility(TextUtils.isEmpty(url) ? GONE : VISIBLE);
-        if (TextUtils.isEmpty(url) || mSeparator == null || url.startsWith("http://") || url.startsWith("https://")) {
+        if (TextUtils.isEmpty(url) || mSeparator == null || !URLUtil.isNetworkUrl(url)) {
+            setVisibility(GONE);
             return;
         }
         mUri = Uri.parse(url);
