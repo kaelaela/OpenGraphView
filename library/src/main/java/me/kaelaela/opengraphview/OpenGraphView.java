@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -314,7 +316,12 @@ public class OpenGraphView extends RelativeLayout {
                 @Override
                 public void onLoadError() {
                     super.onLoadError();
-                    mFavicon.setVisibility(GONE);
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mFavicon.setVisibility(GONE);
+                        }
+                    });
                 }
             }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, host);
         } else {
