@@ -34,6 +34,7 @@ public class LoadOGDataTask extends AsyncTask<String, Void, OGData> {
         conn.setReadTimeout(10000);
         conn.setConnectTimeout(15000);
         conn.setRequestMethod("GET");
+        conn.setRequestProperty("User-Agent","");
         conn.setDoInput(true);
         conn.connect();
         return conn.getInputStream();
