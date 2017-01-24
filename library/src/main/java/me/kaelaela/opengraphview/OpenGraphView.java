@@ -186,9 +186,12 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     public void loadFrom(@Nullable final String url) {
-        if (TextUtils.isEmpty(url) || mSeparator == null || !URLUtil.isNetworkUrl(url)) {
+        if (TextUtils.isEmpty(url) || mSeparator == null || !URLUtil.isNetworkUrl(url)
+                || url.equals("http://") || url.equals("https://")) {
             setVisibility(GONE);
             return;
+        } else {
+            setVisibility(VISIBLE);
         }
         mUri = Uri.parse(url);
         mUrl = url;
