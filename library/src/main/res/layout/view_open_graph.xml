@@ -6,7 +6,7 @@
         android:foreground="@drawable/open_graph_foreground"
         >
 
-    <ImageView
+    <me.kaelaela.opengraphview.RoundableImageView
             android:id="@+id/og_image"
             android:layout_width="96dp"
             android:layout_height="96dp"
@@ -17,8 +17,6 @@
             android:layout_marginStart="1dp"
             android:layout_marginTop="1dp"
             android:adjustViewBounds="true"
-            android:background="@color/light_gray"
-            android:scaleType="centerCrop"
             />
 
     <View

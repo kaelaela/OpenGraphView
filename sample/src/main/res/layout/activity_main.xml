@@ -17,12 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="96dp"
             og:bgColor="@android:color/white"
+            og:cornerRadius="4dp"
             og:descTextColor="@color/text_black"
             og:faviconPlaceHolder="@color/light_gray"
             og:imagePlaceHolder="@color/light_gray"
             og:separateImage="true"
             og:strokeColor="@color/light_gray"
-            og:strokeWidth="2dp"
             og:titleColor="@color/text_black"
             og:urlTextColor="@color/base_gray"
             />
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="trend"
+                android:text="about.me"
                 />
 
         <Button
@@ -80,6 +80,7 @@
                 android:layout_weight="1"
                 android:hint="url"
                 android:inputType="textUri"
+                android:text="http://"
                 android:textColorHint="@color/light_gray"
                 />
 
@@ -121,6 +122,21 @@
                 />
 
     </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="set corner radius"
+            />
+
+    <SeekBar
+            android:id="@+id/radius_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:max="48"
+            />
 
     <Button
             android:id="@+id/open_list_button"

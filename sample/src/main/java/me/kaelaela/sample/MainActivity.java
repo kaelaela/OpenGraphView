@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import me.kaelaela.opengraphview.OpenGraphView;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGraphView.clear();
-                openGraphView.loadFrom("https://github.com/trending");
+                openGraphView.loadFrom("https://about.me/kaelaela");
             }
         });
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openGraphView.clear();
-                openGraphView.loadFrom("http://yuichi31.hatenablog.com/");
+                openGraphView.loadFrom("http://blog.kaelae.la/");
             }
         });
 
@@ -73,13 +74,31 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.left_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGraphView.setImagePosition(OpenGraphView.IMAGE_POS_LEFT);
+                openGraphView.setImagePosition(OpenGraphView.IMAGE_POSITION.LEFT);
             }
         });
         findViewById(R.id.right_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGraphView.setImagePosition(OpenGraphView.IMAGE_POS_RIGHT);
+                openGraphView.setImagePosition(OpenGraphView.IMAGE_POSITION.RIGHT);
+            }
+        });
+
+        final float density = getResources().getDisplayMetrics().density;
+        ((SeekBar) findViewById(R.id.radius_seek_bar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                openGraphView.setCornerRadius(progress * density);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
