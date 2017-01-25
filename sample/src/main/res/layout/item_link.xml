@@ -15,7 +15,6 @@
             og:imagePlaceHolder="@color/light_gray"
             og:separateImage="true"
             og:strokeColor="@color/light_gray"
-            og:strokeWidth="2dp"
             og:titleColor="@color/text_black"
             og:urlTextColor="@color/base_gray"
     />

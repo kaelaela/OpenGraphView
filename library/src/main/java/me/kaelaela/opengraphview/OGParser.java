@@ -1,5 +1,6 @@
 package me.kaelaela.opengraphview;
 
+import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,12 @@ public class OGParser {
     private static final String IMAGE = "\"og:image\"";
     private static final String URL = "og:url";
     private static final String DESC = "og:description";
+
+    private static final String TWITTER_TITLE = "twitter:title";
+    private static final String TWITTER_IMAGE = "\"twitter:image\"";
+    private static final String TWITTER_URL = "twitter:url";
+    private static final String TWITTER_DESC = "twitter:description";
+
     private static final String HEAD_START_TAG = "<head";
     private static final String HEAD_END_TAG = "</head>";
     private static final String META_START_TAG = "<meta";
@@ -57,6 +64,7 @@ public class OGParser {
 
             if (readingHead && sourceTextLine.contains(META_START_TAG)) {
                 metaTags = metaTags + sourceTextLine + "\n";
+                setOGData(sourceTextLine);
             }
         }
         bufferedReader.close();
@@ -84,13 +92,13 @@ public class OGParser {
     private static void setOGData(String line) throws IOException {
         int start = line.indexOf(CONTENT_PROPERTY) + CONTENT_PROPERTY.length();
         int end = line.indexOf("\"", start);
-        if (line.contains(TITLE)) {
+        if (line.contains(TITLE) || line.contains(TWITTER_TITLE)) {
             ogData.setTitle(line.substring(start, end));
-        } else if (line.contains(IMAGE)) {
+        } else if (line.contains(IMAGE) || line.contains(TWITTER_IMAGE)) {
             ogData.setImage(line.substring(start, end));
-        } else if (line.contains(URL)) {
+        } else if (line.contains(URL) || line.contains(TWITTER_URL)) {
             ogData.setUrl(line.substring(start, end));
-        } else if (line.contains(DESC)) {
+        } else if (line.contains(DESC) || line.contains(TWITTER_DESC)) {
             ogData.setDescription(line.substring(start, end));
         }
     }

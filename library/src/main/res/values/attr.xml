@@ -5,7 +5,7 @@
         <attr name="titleColor" format="color" />
         <attr name="descTextColor" format="color" />
         <attr name="urlTextColor" format="color" />
-        <attr name="strokeWidth" format="dimension" />
+        <attr name="cornerRadius" format="dimension"/>
         <attr name="strokeColor" format="color" />
         <attr name="separateImage" format="boolean" />
         <attr name="imagePlaceHolder" format="reference" />

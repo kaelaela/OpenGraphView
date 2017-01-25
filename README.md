@@ -6,12 +6,12 @@ OpenGraphView
 
 Rich url link view for Android.
 
-![default](art/ogview.gif)
+![default](art/ogview.gif)![default](art/ogview2.gif)
 
 ## Usage
 
 ```groovy
-compile 'me.kaelaela:OpenGraphView:1.0.2'
+compile 'me.kaelaela:OpenGraphView:1.1.0@aar'
 ```
 
 ```java
@@ -27,12 +27,12 @@ ogView.loadFrom(url);
             android:layout_width="match_parent"
             android:layout_height="96dp"
             og:bgColor="@android:color/white"
+            og:cornerRadius="4dp"
             og:descTextColor="@color/text_black"
             og:faviconPlaceHolder="@color/light_gray"
             og:imagePlaceHolder="@color/light_gray"
             og:separateImage="true"
             og:strokeColor="@color/light_gray"
-            og:strokeWidth="2dp"
             og:titleColor="@color/text_black"
             og:urlTextColor="@color/base_gray"
             og:imagePosition="left|right"
@@ -42,6 +42,7 @@ ogView.loadFrom(url);
 | Attribute | Description |
 |:---|:---|
 | bgColor | Set background color |
+| cornerRadius | Set view corner radius |
 | imagePlaceHolder | Set image or drawable to image place holder |
 | faviconPlaceHolder | Set image or drawable to favicon place holder |
 | separateImage | Set image separator visiblity |
@@ -57,17 +58,18 @@ ogView.loadFrom(url);
 - [ ] Custom layout
  - [x] View color
  - [ ] View size
- - [x] Text ~~size, line, style,~~ color
+ - [x] Text color
  - [x] Image position
- - [ ] Rounded view
+ - [x] Rounded view
 - [x] Image cache
-- [ ] Enable load twitter
-- [ ] More metadata
+- [x] Enable load twitter
+- [ ] Load more metadata
+- [ ] custom parser
 
 ## Me
 
 Yuichi Maekawa(Kaelaela)
-* Twitter [@Yuichi0531](https://twitter.com/Yuichi0531)
+* Twitter [@kaelaela31](https://twitter.com/kaelaela31)
 * kaelaela.31@gmail.com
 
 ##### Inspired
