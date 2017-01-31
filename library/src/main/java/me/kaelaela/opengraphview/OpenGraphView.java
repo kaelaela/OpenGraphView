@@ -53,6 +53,7 @@ public class OpenGraphView extends RelativeLayout {
     private RectF mStrokeRect = new RectF();
     private Paint mFill = new Paint();
     private Paint mStroke = new Paint();
+    private Parser mParser;
     private static OGCache mOGCache = OGCache.getInstance();
 
     public OpenGraphView(Context context) {
@@ -185,6 +186,10 @@ public class OpenGraphView extends RelativeLayout {
         mOnLoadListener = listener;
     }
 
+    public void setCustomParser(Parser parser) {
+        mParser = parser;
+    }
+
     public void loadFrom(@Nullable final String url) {
         if (TextUtils.isEmpty(url) || mSeparator == null || !URLUtil.isNetworkUrl(url)
                 || url.equals("http://") || url.equals("https://")) {
@@ -227,7 +232,7 @@ public class OpenGraphView extends RelativeLayout {
                         mOnLoadListener.onLoadError();
                     }
                 }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+            }, mParser).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
         } else {
             loadImage(ogData.getImage());
             loadFavicon(mUrl);
