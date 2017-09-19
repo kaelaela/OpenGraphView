@@ -1,11 +1,13 @@
 package me.kaelaela.opengraphview.network.tasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import me.kaelaela.opengraphview.OGParser;
+import me.kaelaela.opengraphview.Parser;
 import me.kaelaela.opengraphview.network.model.OGData;
 
 public class LoadOGDataTask extends AsyncTask<String, Void, OGData> {
@@ -21,11 +23,13 @@ public class LoadOGDataTask extends AsyncTask<String, Void, OGData> {
         }
     }
 
-    private OnLoadListener listener;
-    private OGData data = new OGData();
+    private final Parser mParser;
+    private OnLoadListener mListener;
+    private OGData mData = new OGData();
 
-    public LoadOGDataTask(OnLoadListener listener) {
-        this.listener = listener;
+    public LoadOGDataTask(OnLoadListener listener, Parser parser) {
+        mListener = listener;
+        mParser = (parser == null) ? new OGParser() : parser;
     }
 
     private InputStream downloadUrl(String urlString) throws IOException {
@@ -42,34 +46,34 @@ public class LoadOGDataTask extends AsyncTask<String, Void, OGData> {
 
     @Override
     protected OGData doInBackground(String... urls) {
-        listener.onLoadStart();
+        mListener.onLoadStart();
         InputStream inputStream = null;
         try {
             inputStream = downloadUrl(urls[0]);
-            data = OGParser.parse(inputStream);
+            mData = mParser.parse(inputStream);
         } catch (IOException e) {
-            listener.onLoadError();
+            mListener.onLoadError();
             e.printStackTrace();
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    listener.onLoadError();
+                    mListener.onLoadError();
                     e.printStackTrace();
                 }
             }
         }
-        return data;
+        return mData;
     }
 
     @Override
     protected void onPostExecute(OGData og) {
         super.onPostExecute(og);
         if (og == null) {
-            listener.onLoadError();
+            mListener.onLoadError();
             return;
         }
-        listener.onLoadSuccess(og);
+        mListener.onLoadSuccess(og);
     }
 }

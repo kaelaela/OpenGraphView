@@ -7,27 +7,28 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import me.kaelaela.opengraphview.network.model.OGData;
 
-public class OGParser {
+public class OGParser implements Parser {
 
-    private static final String DECODE_UTF8 = "UTF-8";
-    private static final String TITLE = "og:title";
-    private static final String IMAGE = "\"og:image\"";
-    private static final String URL = "og:url";
-    private static final String DESC = "og:description";
+    private final String DECODE_UTF8 = "UTF-8";
+    private final String TITLE = "og:title";
+    private final String IMAGE = "\"og:image\"";
+    private final String URL = "og:url";
+    private final String DESC = "og:description";
 
-    private static final String TWITTER_TITLE = "twitter:title";
-    private static final String TWITTER_IMAGE = "\"twitter:image\"";
-    private static final String TWITTER_URL = "twitter:url";
-    private static final String TWITTER_DESC = "twitter:description";
+    private final String TWITTER_TITLE = "twitter:title";
+    private final String TWITTER_IMAGE = "\"twitter:image\"";
+    private final String TWITTER_URL = "twitter:url";
+    private final String TWITTER_DESC = "twitter:description";
 
-    private static final String HEAD_START_TAG = "<head";
-    private static final String HEAD_END_TAG = "</head>";
-    private static final String META_START_TAG = "<meta";
-    private static final String CONTENT_PROPERTY = "content=\"";
+    private final String HEAD_START_TAG = "<head";
+    private final String HEAD_END_TAG = "</head>";
+    private final String META_START_TAG = "<meta";
+    private final String CONTENT_PROPERTY = "content=\"";
 
-    private static OGData ogData;
+    private OGData ogData;
 
-    public static OGData parse(InputStream inputStream) throws IOException {
+    @Override
+    public OGData parse(InputStream inputStream) throws IOException {
         ogData = new OGData();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, DECODE_UTF8);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -70,20 +71,16 @@ public class OGParser {
         return ogData;
     }
 
-    private static void parseFromOneLineHeader(String content) {
+    private void parseFromOneLineHeader(String content) {
         int first = content.indexOf(META_START_TAG), last = content.lastIndexOf(META_START_TAG);
         while (first < last) {
             int tabLength = META_START_TAG.length();
-            try {
-                setOGData(content.substring(first, content.indexOf(META_START_TAG, first + tabLength)));
-                first = content.indexOf(META_START_TAG, first + tabLength);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            setOGData(content.substring(first, content.indexOf(META_START_TAG, first + tabLength)));
+            first = content.indexOf(META_START_TAG, first + tabLength);
         }
     }
 
-    private static String formattingMetaTags(String headText) {
+    private String formattingMetaTags(String headText) {
         String formattedText = "";
         int start = headText.indexOf(META_START_TAG), end = headText.indexOf(">", start) + 1;
         formattedText = formattedText + headText.substring(start, end) + "\n";
@@ -100,7 +97,7 @@ public class OGParser {
         return formattedText;
     }
 
-    private static void setOGData(String line) throws IOException {
+    private void setOGData(String line) {
         int start = line.indexOf(CONTENT_PROPERTY) + CONTENT_PROPERTY.length();
         int end = line.indexOf("\"", start);
         if (line.contains(TITLE) || line.contains(TWITTER_TITLE)) {
