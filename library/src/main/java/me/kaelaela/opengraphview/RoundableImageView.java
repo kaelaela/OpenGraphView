@@ -9,10 +9,9 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-public class RoundableImageView extends ImageView {
+public class RoundableImageView extends android.support.v7.widget.AppCompatImageView {
 
     private int mSide;
     private int mMargin;
