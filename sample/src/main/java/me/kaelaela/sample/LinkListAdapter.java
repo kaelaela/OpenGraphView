@@ -21,6 +21,7 @@ public class LinkListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         linkList.add("https://twitter.com/kaelaela31");
         linkList.add("https://about.me/kaelaela");
         linkList.add("https://twitter.com/kaelaela31/status/815744327951392768");
+        linkList.add("https://www.reddit.com/r/androiddev/");
     }
 
     @Override

@@ -1,6 +1,5 @@
 package me.kaelaela.opengraphview;
 
-import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,17 +31,17 @@ public class OGParser {
         ogData = new OGData();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream, DECODE_UTF8);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String headContents = "";
-        String metaTags = "";
-        String sourceTextLine;
+        String headContents = "", metaTags = "", sourceTextLine;
         boolean readingHead = false;
         while ((sourceTextLine = bufferedReader.readLine()) != null) {
-            int headStart;
-            int headEnd;
+            int headStart, headEnd;
             if (sourceTextLine.contains(HEAD_START_TAG)) {
                 headStart = sourceTextLine.indexOf(">", sourceTextLine.indexOf(HEAD_START_TAG));
                 if (headStart < sourceTextLine.length()) {
                     headContents = headContents + sourceTextLine.substring(headStart + 1);
+                }
+                if (sourceTextLine.contains(HEAD_END_TAG)) {
+                    parseFromOneLineHeader(headContents);
                 }
                 readingHead = true;
             } else if (sourceTextLine.contains(HEAD_END_TAG)) {
@@ -71,10 +70,22 @@ public class OGParser {
         return ogData;
     }
 
+    private static void parseFromOneLineHeader(String content) {
+        int first = content.indexOf(META_START_TAG), last = content.lastIndexOf(META_START_TAG);
+        while (first < last) {
+            int tabLength = META_START_TAG.length();
+            try {
+                setOGData(content.substring(first, content.indexOf(META_START_TAG, first + tabLength)));
+                first = content.indexOf(META_START_TAG, first + tabLength);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private static String formattingMetaTags(String headText) {
         String formattedText = "";
-        int start = headText.indexOf(META_START_TAG);
-        int end = headText.indexOf(">", start) + 1;
+        int start = headText.indexOf(META_START_TAG), end = headText.indexOf(">", start) + 1;
         formattedText = formattedText + headText.substring(start, end) + "\n";
         int length = headText.length();
         while (end < length) {

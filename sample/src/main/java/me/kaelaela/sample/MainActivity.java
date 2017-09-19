@@ -27,6 +27,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        findViewById(R.id.open_list_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinkListActivity.launch(v.getContext());
+            }
+        });
+
+        if (openGraphView == null) {
+            return;
+        }
+
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,13 +111,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
-            }
-        });
-
-        findViewById(R.id.open_list_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinkListActivity.launch(v.getContext());
             }
         });
     }
