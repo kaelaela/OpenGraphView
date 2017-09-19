@@ -15,11 +15,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,6 +51,7 @@ public class OpenGraphView extends RelativeLayout {
     private RectF mStrokeRect = new RectF();
     private Paint mFill = new Paint();
     private Paint mStroke = new Paint();
+    private Parser mParser;
     private static OGCache mOGCache = OGCache.getInstance();
 
     public OpenGraphView(Context context) {
@@ -102,9 +101,10 @@ public class OpenGraphView extends RelativeLayout {
         setImagePosition((attrPosition == 0 || attrPosition != 1) ? IMAGE_POSITION.LEFT : IMAGE_POSITION.RIGHT);
         mSeparate = array.getBoolean(R.styleable.OpenGraphView_separateImage, true);
         mSeparator.setVisibility(mSeparate ? VISIBLE : GONE);
-        mRoundableImageView.setImageDrawable(array.getDrawable(R.styleable.OpenGraphView_imagePlaceHolder));
-        ((ImageView) findViewById(R.id.favicon))
-                .setImageDrawable(array.getDrawable(R.styleable.OpenGraphView_faviconPlaceHolder));
+        mRoundableImageView.setBackgroundColor(array.getColor(R.styleable.OpenGraphView_imagePlaceHolder,
+                ContextCompat.getColor(getContext(), R.color.light_gray)));
+        findViewById(R.id.favicon).setBackgroundColor(array.getColor(R.styleable.OpenGraphView_faviconPlaceHolder,
+                ContextCompat.getColor(getContext(), R.color.light_gray)));
         array.recycle();
     }
 
@@ -185,6 +185,10 @@ public class OpenGraphView extends RelativeLayout {
         mOnLoadListener = listener;
     }
 
+    public void setCustomParser(Parser parser) {
+        mParser = parser;
+    }
+
     public void loadFrom(@Nullable final String url) {
         if (TextUtils.isEmpty(url) || mSeparator == null || !URLUtil.isNetworkUrl(url)
                 || url.equals("http://") || url.equals("https://")) {
@@ -227,7 +231,7 @@ public class OpenGraphView extends RelativeLayout {
                         mOnLoadListener.onLoadError();
                     }
                 }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+            }, mParser).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
         } else {
             loadImage(ogData.getImage());
             loadFavicon(mUrl);
@@ -292,6 +296,7 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     private void setImage(@Nullable Bitmap bitmap) {
+        mRoundableImageView.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
         mRoundableImageView.setVisibility(bitmap == null ? GONE : VISIBLE);
         mSeparator.setVisibility(bitmap == null ? GONE : VISIBLE);
         mRoundableImageView.setImageBitmap(bitmap);
@@ -378,10 +383,10 @@ public class OpenGraphView extends RelativeLayout {
     }
 
     public void clear() {
-        mRoundableImageView.setImageDrawable(null);
+        mRoundableImageView.setImageResource(0);
         ((TextView) findViewById(R.id.og_url)).setText("");
         ((TextView) findViewById(R.id.og_title)).setText("");
         ((TextView) findViewById(R.id.og_description)).setText("");
-        ((ImageView) findViewById(R.id.favicon)).setImageURI(Uri.parse(""));
+        ((ImageView) findViewById(R.id.favicon)).setImageResource(0);
     }
 }
