@@ -37,7 +37,7 @@ public class OGParser {
             int headStart, headEnd;
             if (sourceTextLine.contains(HEAD_START_TAG)) {
                 headStart = sourceTextLine.indexOf(">", sourceTextLine.indexOf(HEAD_START_TAG));
-                if (headStart < sourceTextLine.length()) {
+                if (headStart + 1 < sourceTextLine.length()) {
                     headContents = headContents + sourceTextLine.substring(headStart + 1);
                 }
                 if (sourceTextLine.contains(HEAD_END_TAG)) {
