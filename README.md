@@ -11,7 +11,7 @@ Rich url link view for Android.
 ## Usage
 
 ```groovy
-compile 'me.kaelaela:OpenGraphView:1.1.0@aar'
+compile 'me.kaelaela:OpenGraphView:1.2.0@aar'
 ```
 
 ```java
@@ -64,7 +64,7 @@ ogView.loadFrom(url);
 - [x] Image cache
 - [x] Enable load twitter
 - [ ] Load more metadata
-- [ ] custom parser
+- [x] custom parser
 
 ## Me
 

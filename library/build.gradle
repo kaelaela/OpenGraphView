@@ -16,7 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
 }
 
 def file = project.rootProject.file('local.properties')
