@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.media.ThumbnailUtils;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
@@ -79,14 +80,7 @@ public class RoundableImageView extends android.support.v7.widget.AppCompatImage
             mPaint.setColor(ContextCompat.getColor(getContext(), android.R.color.white));
         }
 
-        Bitmap centerCroppedBitmap;
-        if (bm.getHeight() <= 0 || bm.getWidth() <= 0 || mSide <= 0 ||
-                bm.getWidth() < mSide || bm.getHeight() < mSide) {
-            centerCroppedBitmap = bm;
-        } else {
-            centerCroppedBitmap = Bitmap.createBitmap(bm, (bm.getWidth() / 2) - (mSide / 2),
-                    (bm.getHeight() / 2) - (mSide / 2), mSide, mSide);
-        }
+        Bitmap centerCroppedBitmap = ThumbnailUtils.extractThumbnail(bm, mSide, mSide);
         BitmapShader shader = new BitmapShader(centerCroppedBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         mPaint.setShader(shader);
     }
