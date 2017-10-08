@@ -1,12 +1,12 @@
 package me.kaelaela.opengraphview;
 
 public abstract class OnLoadListener {
-    void onLoadStart() {
+    public void onLoadStart() {
     }
 
-    void onLoadFinish() {
+    public void onLoadFinish() {
     }
     
-    void onLoadError() {
+    public void onLoadError(Throwable e) {
     }
 }

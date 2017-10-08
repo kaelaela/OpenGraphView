@@ -4,10 +4,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import me.kaelaela.opengraphview.OnLoadListener;
 import me.kaelaela.opengraphview.OpenGraphView;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +20,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final OpenGraphView openGraphView = (OpenGraphView) findViewById(R.id.og_view);
         if (openGraphView != null) {
+            openGraphView.setOnLoadListener(new OnLoadListener() {
+                @Override
+                public void onLoadError(Throwable e) {
+                    Log.d("TAG", e.getMessage());
+                    openGraphView.setVisibility(View.GONE);
+                }
+            });
             openGraphView.loadFrom("http://ogp.me/");
             openGraphView.setOnClickListener(new View.OnClickListener() {
                 @Override
