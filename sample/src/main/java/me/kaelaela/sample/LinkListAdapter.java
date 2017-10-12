@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import me.kaelaela.opengraphview.OpenGraphView;
+import me.kaelaela.opengraphview.Parser;
+import me.kaelaela.sample.custom.XMLPullSampleParser;
 
 public class LinkListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -44,12 +46,16 @@ public class LinkListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private class LinkView extends RecyclerView.ViewHolder {
 
+        Parser parser = new XMLPullSampleParser();
+        OpenGraphView ogView;
+
         public LinkView(View itemView) {
             super(itemView);
+            ogView = (OpenGraphView) itemView.findViewById(R.id.og_view);
+            //ogView.setCustomParser(parser);
         }
 
         public void bind(String url) {
-            OpenGraphView ogView = (OpenGraphView) itemView.findViewById(R.id.og_view);
             ogView.clear();
             ogView.loadFrom(url);
         }

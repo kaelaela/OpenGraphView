@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final OpenGraphView openGraphView = (OpenGraphView) findViewById(R.id.og_view);
+        //You can change the original parser by following code.
+//        openGraphView.setCustomParser(new XMLPullSampleParser());
         if (openGraphView != null) {
             openGraphView.setOnLoadListener(new OnLoadListener() {
                 @Override
