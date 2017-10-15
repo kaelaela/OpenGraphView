@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
@@ -224,7 +225,7 @@ public class OpenGraphView extends RelativeLayout {
                 @Override
                 public void onLoadError(Throwable e) {
                     if (mOnLoadListener != null) {
-                        mOnLoadListener.onLoadError();
+                        mOnLoadListener.onLoadError(e);
                     }
                 }
             }));
