@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         //You can change the original parser by following code.
 //        openGraphView.setCustomParser(new XMLPullSampleParser());
 //        openGraphView.setCustomParser(new JSoupSampleParser());
+//        openGraphView.setCustomParser(new JSpoonSampleParser());
         if (openGraphView != null) {
             openGraphView.setOnLoadListener(new OnLoadListener() {
                 @Override

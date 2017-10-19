@@ -26,5 +26,5 @@ dependencies {
     compile "com.android.support:design:$SUPPORT_APP_COMPAT_VERSION"
     compile "com.android.support:customtabs:$SUPPORT_APP_COMPAT_VERSION"
 
-    compile 'org.jsoup:jsoup:1.10.3'
+    compile 'pl.droidsonroids:jspoon:1.0.1'
 }
