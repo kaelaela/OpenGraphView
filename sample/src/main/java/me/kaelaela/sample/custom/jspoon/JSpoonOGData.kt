@@ -1,14 +1,14 @@
-package me.kaelaela.sample.custom.jspoon;
+package me.kaelaela.sample.custom.jspoon
 
-import pl.droidsonroids.jspoon.annotation.Selector;
+import pl.droidsonroids.jspoon.annotation.Selector
 
-public class JSpoonOGData {
+class JSpoonOGData {
     @Selector("head > title")
-    public String title;
+    var title: String? = null
     @Selector(value = "meta[name=\"description\"]", attr = "content")
-    public String desc;
+    var desc: String? = null
     @Selector(value = "meta[property='og:image']", attr = "content")
-    public String image;
+    var image: String? = null
     @Selector(value = "meta[property='og:url']", attr = "content")
-    public String url;
+    var url: String? = null
 }

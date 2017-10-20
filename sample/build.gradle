@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
@@ -27,4 +28,8 @@ dependencies {
     compile "com.android.support:customtabs:$SUPPORT_APP_COMPAT_VERSION"
 
     compile 'pl.droidsonroids:jspoon:1.0.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
